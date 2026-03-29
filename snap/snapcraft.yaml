@@ -3,7 +3,7 @@ base: core24
 summary: Streams video from camera to browser
 adopt-info: restreamer
 description: |
-  Can be used to turn your Raspberry Pi with attached CSI-2 Camera into webcam.
+  Can be used to turn your Raspberry Pi with attached CSI-2 Camera into WebRTSP IP Camera.
   Supports any camera device supported by libcamera.
   Can act as remote Agent for WebRTSP server (https://snapcraft.io/rtsp-to-webrtsp)
 
