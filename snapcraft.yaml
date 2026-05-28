@@ -27,62 +27,52 @@ layout:
     symlink: $SNAP/opt/${CRAFT_PROJECT_NAME}/share/libcamera
 
 parts:
+  meson-deps:
+    plugin: python
+    source: .
+    python-packages:
+      - meson
+      - ninja
+      - jinja2
+      - pyyaml
+      - ply
   gstreamer:
     plugin: meson
-    source: https://gitlab.freedesktop.org/gstreamer/gstreamer.git
-    source-branch: 1.24
+    source: https://github.com/WebRTSP/gstreamer.git
+    source-branch: 1.28
+    after:
+      - meson-deps
     build-packages:
-      - meson
-      - ninja-build
       - flex
       - bison
       - nasm
       - libsrtp2-dev
     meson-parameters:
-      - --prefix=/opt/${CRAFT_PROJECT_NAME}
-      - -Dauto_features=disabled
-      - -Dpython=disabled
+      - --prefix=/opt/${SNAPCRAFT_PROJECT_NAME}
+      - --buildtype=release
+      - -Dbase=enabled
+      - -Dgood=enabled
+      - -Dbad=enabled
+      - -Dugly=enabled
       - -Dlibav=disabled
       - -Ddevtools=disabled
+      - -Dges=disabled
       - -Drtsp_server=disabled
       - -Dgst-examples=disabled
+      - -Dpython=disabled
+      - -Dgpl=disabled
+      - -Dbenchmarks=disabled
+      - -Dtools=disabled
       - -Dqt5=disabled
       - -Dqt6=disabled
       - -Dtests=disabled
       - -Dexamples=disabled
       - -Dintrospection=disabled
       - -Dnls=disabled
-      - -Ddoc=disabled
-      - -Dgstreamer:ptp-helper-permissions=none
-      - -Dgpl=enabled
-      - -Dtools=enabled # required for orc
-      - -Dorc=enabled
-      - -Dorc-source=subproject
-      - -Dx264:asm=enabled
-      - -Dwebrtc=enabled
-      - -Dlibnice=enabled
-      - -Dlibnice:gupnp=auto
-      - -Dlibnice:gstreamer=enabled
-      - -Dlibnice:crypto-library=auto
-      - -Dgood=enabled
-      - -Dgst-plugins-good:rtpmanager=enabled
-      - -Dgst-plugins-good:udp=enabled
-      - -Dgst-plugins-good:rtp=enabled
-      - -Dgst-plugins-good:v4l2=enabled
-      - -Dgst-plugins-good:v4l2-probe=true
-      - -Dgst-plugins-good:v4l2-libv4l2=auto
-      - -Dgst-plugins-good:v4l2-gudev=auto
-      - -Dbad=enabled
-      - -Dgst-plugins-bad:webrtc=enabled
-      - -Dgst-plugins-bad:dtls=enabled
-      - -Dgst-plugins-bad:srtp=enabled
-      - -Dgst-plugins-bad:sctp=enabled
-      - -Dugly=enabled
-      - -Dgst-plugins-ugly:x264=enabled
     stage-packages:
       - libunwind8
       - libdw1
-      - libgupnp-1.6-0
+      - libupnp17t64
       - libgupnp-igd-1.6-0
       - libsrtp2-1
   libcamera:
@@ -90,15 +80,13 @@ parts:
     source: https://github.com/raspberrypi/libcamera.git
     source-branch: v0.7.0+rpt20260205
     after:
+      - meson-deps
       - gstreamer
     build-packages:
       - meson
       - g++
       - ninja-build
       - libyaml-dev
-      - python3-yaml
-      - python3-ply
-      - python3-jinja2
       - libssl-dev
       - openssl
       - libevent-dev
